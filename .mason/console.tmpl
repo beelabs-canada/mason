@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+use common::sense;
+
+use Env;
+
+use File::Spec;
+use lib File::Spec->catdir( substr( $DOCUMENT_ROOT, 0, rindex( $DOCUMENT_ROOT, '/')  ), 'cgi-lib');
+
+use YAML::Tiny;
+
+# =================
+# = PREPROCESSING =
+# =================
+my $config = YAML::Tiny->read( path($0)->sibling('index.yaml')->stringify  )->[0];
+
