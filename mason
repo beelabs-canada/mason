@@ -6,7 +6,7 @@ no warnings 'experimental::smartmatch';
 use Path::Tiny qw/path/;
 use DBI;
 
-
+# TODO: Need to work on segregating this file a bit better for documentation
 # ===================================================================
 # = INITIALIZATION                                                  =
 # ===================================================================
@@ -33,32 +33,33 @@ my ( $docroot , $dbroot, $mason ) = (
 # ===================================================================
 given ($command) {
 	
-    # DB
-    when( /^db:make$/ ) {
-        database( @params );
-    }
-    when( /^db:truncate$/ ) {
-        refresh( @params );
-    }
-    # Migrate
-    when( /^migration:make$/ ) {
-        sqlfile( @params );
-    }
-    when( /^migration:run$/ ) {
-        migrate( @params );
-    }
-    # Console
-    when( /^console:make$/ ) {
-        console( @params );
-    }
     # Route
-    when( /^route:make$/ ) {
+    when( /^make:route$/ ) {
         route( @params );
     }
-    when( /^route:silence$/ ) {
-        silence( @params);
+    # Console
+    when( /^make:console$/ ) {
+        console( @params );
+    }
+    # Migrate
+    when( /^make:migration$/ ) {
+        sqlfile( @params );
+    }
+    # DB
+    when( /^make:db$/ ) {
+        database( @params );
+    }
+    when( /^clear:db$/ ) {
+        refresh( @params );
+    }
+   
+    when( /^run:migration$/ ) {
+        migrate( @params );
     }
     
+    when( /^silence:route$/ ) {
+        silence( @params);
+    }
 	default {
 		usage();
 	}
@@ -77,21 +78,21 @@ sub usage
 	say join( "\n", (
 	"# Mason v1.0",
 	"-------------------------------------------------------------",
-    "Usage: perl mason [(route|db|console):*] [*] [private|public]",
+    "Usage: perl mason [(make|clear|run|silence):*] [*] [private|public]",
 	"options:",
     "   [help]",
 	"       help - this help screen",
-	"   [route]",
-	"       route:make - create a route",
-    "       route:silence - make a specific route not available to browsers (404)",
-	"   [database]",
-    "       db:make - create a database",
-	"       db:truncate - truncate the database and re-run migrations",
-    "   [migration]",
-    "       migration:make - create blank migration file",
-    "       migration:run - execute the database migrations",
-    "   [console]",
-    "       console:make - create a console only route"
+	"   [make]",
+	"       make:route - create a route",
+    "       make:db - create a database",
+    "       make:migration - create blank migration file",
+    "       make:console - create a console only route",
+	"   [clear]",
+	"      clear:db - truncate the database and re-run migrations",
+    "   [run]",
+    "       run:migration - execute the database migrations"
+    "   [route]",
+    "       route:silence - make a specific route not available to browsers (404)"
 	));
 }
 
@@ -109,7 +110,7 @@ sub route
 	
 	if ( $route->child( 'index.cgi' )->exists )
 	{
-        say '   [route:make] file '.lc( $route ).'/index.cgi already exists [aborting]';
+        say '   [make:route] file '.lc( $route ).'/index.cgi already exists [aborting]';
 		return;
 	}
     
@@ -337,6 +338,7 @@ sub generate
     
     return $route;
 }
+
 
 
 #
