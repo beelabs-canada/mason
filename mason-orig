@@ -1,41 +1,16 @@
-package Mason;
+#!/usr/bin/env perl
 
 use common::sense;
+no warnings 'experimental::smartmatch';
 
 use Path::Tiny qw/path/;
 use DBI;
 
-
-run() if not caller();
-
-
-sub new
-{
-    my ( $class, $args ) = ( shift, { @_ } );
-    
-    
-} 
-
-
-sub process
-{
-    my ( $self, @params ) = @_;
-    
-}
-
-
-sub run
-{
-    return shift->new( @_ )->exec;
-}
-
-
-
-package Mason::Make;
-
-
-1;
-
+# TODO: Need to work on segregating this file a bit better for documentation
+# ===================================================================
+# = INITIALIZATION                                                  =
+# ===================================================================
+# lets get the arguements passed
 my @args = @ARGV;
 
 
